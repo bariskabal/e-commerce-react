@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout.jsx";
+import {Layout} from "./layouts/Layout";
 import CartProvider from "./context/CartProvider.jsx";
 import App from "./App.jsx";
 import "slick-carousel/slick/slick.css";
@@ -10,9 +10,9 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <CartProvider>
-      <MainLayout>
+      <Layout>
         <App />
-      </MainLayout>
+      </Layout>
     </CartProvider>
   </BrowserRouter>
 );

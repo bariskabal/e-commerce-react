@@ -10,8 +10,6 @@ export default function CartProvider({ children }) {
       ? JSON.parse(localStorage.getItem("cartItems"))
       : []
   );
-  console.log(cartItems.length);
-
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);

@@ -15,7 +15,6 @@ export default function ProductItem({ productItem }) {
     window.scrollTo(0, 0); // scrollun ortadan başlamasını engeller
   };
 
-  console.log(filteredCart);
   return (
     <div className="product-item glide__slide">
       <div className="product-image">

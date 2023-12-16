@@ -2,11 +2,15 @@ import "./Header.css";
 import Proptypes from "prop-types";
 import { useContext } from "react";
 import { CartContext } from "../../../context/CartProvider";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { message } from "antd";
 export default function Header({ setIsSearchShow }) {
   const { cartItems } = useContext(CartContext);
 
   const { pathname } = useLocation();
+  const user = localStorage.getItem("token");
+
+  const navigate = useNavigate();
 
   return (
     <header>
@@ -222,9 +226,9 @@ export default function Header({ setIsSearchShow }) {
                 >
                   <i className="bi bi-search"></i>
                 </button>
-                <a href="#">
+                {/* <a href="#">
                   <i className="bi bi-heart"></i>
-                </a>
+                </a> */}
                 <div className="header-cart">
                   <Link to={"/cart"} className="header-cart-link">
                     <i className="bi bi-bag"></i>
@@ -233,6 +237,26 @@ export default function Header({ setIsSearchShow }) {
                     </span>
                   </Link>
                 </div>
+                {user && (
+                  <button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Çıkış yapmak istediğinize emin misiniz ?"
+                        )
+                      ) {
+                        {
+                          localStorage.removeItem("token");
+                          message.success("Çıkış başarılı");
+                          navigate("/")
+                        }
+                      }
+                    }}
+                    className="search-button"
+                  >
+                    <i className="bi bi-box-arrow-right"></i>
+                  </button>
+                )}
               </div>
             </div>
           </div>
