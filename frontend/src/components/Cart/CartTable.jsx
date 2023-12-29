@@ -4,7 +4,6 @@ import {CartContext} from "../../context/CartProvider"
 
 export default function CartTable() {
   const { cartItems } = useContext(CartContext);
-
   return (
     <table className="shop-table">
       <thead>
@@ -18,8 +17,8 @@ export default function CartTable() {
         </tr>
       </thead>
       <tbody className="cart-wrapper">
-        {cartItems.map((cartItem) => (
-          <CartItem key={cartItem.id} cartItem={cartItem} />
+        {cartItems.map((cartItem,index) => (
+          <CartItem key={index} cartItem={cartItem} />
         ))}
       </tbody>
     </table>

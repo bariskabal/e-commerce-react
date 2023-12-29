@@ -14,9 +14,15 @@
   transition: 0.3s ease all;
 }
 
+.not-found-product {
+  text-align: center;
+  padding: 3rem;
+  color: red;
+}
+
 .modal-search.show {
-    visibility: visible;
-    opacity: 1;
+  visibility: visible;
+  opacity: 1;
 }
 
 .modal-overlay {

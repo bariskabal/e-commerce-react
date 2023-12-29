@@ -5,9 +5,13 @@ const Review = require("../models/Review.js");
 const { ObjectId } = require('mongodb');
 
 // New Review
-router.post("/", validateToken, async (req, res) => {
+router.post("/addReview/:productId", validateToken, async (req, res) => {
   try {
-    const review = req.body;
+    const review = {
+      ...req.body,
+      user: req.user.id, // Kullanıcının ID'sini ekleyin
+      product: req.params.productId // Ürün ID'sini ekleyin
+    };
     const newReview = new Review(review);
     await newReview.save();
     res.status(200).json(newReview);
@@ -17,21 +21,30 @@ router.post("/", validateToken, async (req, res) => {
 });
 
 //Get Reviews  by ProductID
-router.get("/:productId", async (req, res) => {
+router.get("/product/:productId", async (req, res) => {
   try {
     const productId = req.params.productId;
-
     const reviews = await Review.aggregate([
       {
         $match: { product: new ObjectId(productId) }, // Belirli bir ürünü seç
       },
       {
         $sort: { createdAt: -1 } // 'createdAt' alanına göre azalan sıralama
+      },
+      {
+        $lookup: {
+          from: "users", // 'users' koleksiyonuna bak
+          localField: "user", // 'Review' koleksiyonundaki alan
+          foreignField: "_id", // 'User' koleksiyonundaki alan
+          as: "userDetails" // Eşleşen kullanıcı bilgilerini bu alanda sakla
+        }
+      },
+      {
+        $unwind: "$userDetails" // Her yorum için tek bir kullanıcı bilgisi olacak şekilde düzleştir
       }
     ]);
-
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({ error: "Henüz bu ürüne yorum yapılmadı" });
+      return res.status(200).json({ error: "Henüz bu ürüne yorum yapılmadı" });
     }
     res.status(200).json(reviews);
   } catch (err) {

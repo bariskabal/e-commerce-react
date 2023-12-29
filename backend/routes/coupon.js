@@ -49,7 +49,7 @@ router.get("/:couponId", async (req, res) => {
     const couponId = req.params.couponId;
     const coupon = await Coupon.findById(couponId); // tüm verileri getirir
     if (!coupon) {
-      return res.status(404).json({ error: "Color bulunamadı" });
+      return res.status(404).json({ error: "coupon bulunamadı" });
     }
     res.status(200).json(coupon);
   } catch (err) {
@@ -58,7 +58,7 @@ router.get("/:couponId", async (req, res) => {
 });
 
 //Get Coupon by Coupon code
-router.get("/code/:couponCode", validateToken, async (req, res) => {
+router.get("/code/:couponCode", async (req, res) => {
   try {
     const couponCode = req.params.couponCode;
     const coupon = await Coupon.findOne({ code: couponCode }); // tüm verileri getirir

@@ -114,7 +114,11 @@ input[type="number"]::-webkit-inner-spin-button {
   width: 100%;
 }
 
-/*! base end  */
+@media (min-width: 992px) {
+  .single-image-wrapper .img-fluid.active {
+    min-width: 500px !important;
+  }
+}
 
 /* base responsive  */
 

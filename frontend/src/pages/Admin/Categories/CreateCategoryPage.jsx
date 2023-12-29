@@ -32,6 +32,11 @@ export default function CreateCategoryPage() {
       }
       return true;
     },
+    async onRemove(file) {
+      // Kaldırılan dosyanın referansını bulun ve state'ten çıkarın
+      const newUploadImages = uploadImages.filter(item => item.uid !== file.uid);
+      await setUploadImages(newUploadImages);
+    },
     async onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {

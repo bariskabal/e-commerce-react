@@ -1,8 +1,8 @@
 import "./Gallery.css";
 import { useState } from "react";
-import productsData from "../../../data.json";
 import Slider from "react-slick";
 import PropTypes from "prop-types";
+import Image from "../../../config/Images/image";
 
 function PrevBtn({ onClick }) {
   return (
@@ -26,7 +26,7 @@ function NextBtn({ onClick }) {
       data-glide-dir=">"
       onClick={onClick}
       style={{
-        zIndex: "2",
+        zIndex: "",
       }}
     >
       <i className="bi bi-chevron-right"></i>
@@ -42,16 +42,16 @@ PrevBtn.propTypes = {
   onClick: PropTypes.func,
 };
 
-export default function Gallery() {
+export default function Gallery( {productImages}) {
   const [activeImg, setActiveImg] = useState({
-    img: productsData[0].img.singleImage,
+    img: productImages[0],
     imgIndex: 0,
   });
 
   const sliderSettings = {
     dots: false,
     infinite: true,
-    slidesToShow: 3,
+    slidesToShow: 2,
     slidesToScroll: 1,
     nextArrow: <NextBtn />,
     prevArrow: <PrevBtn />,
@@ -60,31 +60,30 @@ export default function Gallery() {
   return (
     <div className="product-gallery">
       <div className="single-image-wrapper">
-        <img src={activeImg.img} id="single-image" alt="" />
+        <Image
+          imageUrl={activeImg.img}
+          id="single-image"
+        />
       </div>
       <div className="product-thumb">
         <div className="glide__track" data-glide-el="track">
           <ol className="gallery-thumbs glide__slides">
-          <Slider {...sliderSettings}>
-              {productsData[0].img.thumbs.map((itemImg, index) => (
+            <Slider {...sliderSettings}>
+              {productImages.map((itemImg, index) => (
                 <li
                   className="glide__slide glide__slide--active"
                   key={index}
                   onClick={() =>
                     setActiveImg({
-                      img: productsData[0].img.thumbs[index],
+                      img: itemImg,
                       imgIndex: index,
                     })
                   }
                 >
-                  <img
-                    src={itemImg}
-                    alt=""
-                    className={`img-fluid ${
-                      activeImg.imgIndex === index
-                        ? "active"
-                        : ""
-                    } `}
+                  <Image
+                    imageUrl={itemImg}
+                    active={activeImg.imgIndex}
+                    index={index}
                   />
                 </li>
               ))}
@@ -95,3 +94,7 @@ export default function Gallery() {
     </div>
   );
 }
+
+Gallery.propTypes = {
+  productImages: PropTypes.array,
+};

@@ -1,6 +1,7 @@
 import { Layout, Menu } from "antd";
 import PropTypes from "prop-types";
-
+import { useState, useEffect } from "react";
+import { message } from "antd";
 import {
   DashboardOutlined,
   AppstoreOutlined,
@@ -15,37 +16,34 @@ const { Sider, Header, Content } = Layout;
 
 export default function AdminLayout({ children }) {
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+  const token = JSON.parse(localStorage.getItem("token"));
+  const [userRoleState, setUserRoleState] = useState();
 
-  // useEffect(() => {
-  //   const getUser = async () => {
-  //     try {
-  //       console.log("geldi");
-  //       const response = await fetch(`${apiUrl}/user/currentUserRoles`, {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token.accessToken}`,
-  //         },
-  //       });
-  //       console.log(response);
-  //       if (response.status) {
-  //         message.error(
-  //           response.status == 400 ? response.error : "Bir sorun oluştu"
-  //         );
-  //       }
-  //       console.log("geldi");
-  //       const role = await response.json();
-  //       console.log(role);
-  //       await setUserRoleState(role);
-  //       console.log(response);
-  //       console.log(role);
-  //       return role;
-  //     } catch (error) {
-  //       console.log("Error fetching user roles:", error);
-  //     }
-  //   };
-  //   getUser();
-  // }, []);
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/user/currentUserRoles`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+        });
+        if (!response.status) {
+          message.error(
+            response.status == 400 ? response.error : "Bir sorun oluştu"
+          );
+        }
+        const role = await response.json();
+        await setUserRoleState(role);
+        return role;
+      } catch (error) {
+        console.log("Error fetching user roles:", error);
+      }
+    };
+    getUser();
+  }, []);
 
   const menuItems = [
     {
@@ -198,12 +196,12 @@ export default function AdminLayout({ children }) {
       icon: <RollbackOutlined />,
       label: "Ana Sayfaya Git",
       onClick: () => {
-        navigate(`/`);
+        window.location.href = "/"
       },
     },
   ];
 
-  // if (userRoleState == "admin") {
+  if (userRoleState == "admin") {
     return (
       <div className="admin-layout">
         <Layout
@@ -248,9 +246,9 @@ export default function AdminLayout({ children }) {
         </Layout>
       </div>
     );
-  // } else {
-  //   return navigate("/");
-  // }
+  } else {
+    return navigate("/");
+  }
 }
 
 AdminLayout.propTypes = {

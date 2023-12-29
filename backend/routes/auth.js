@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
           roles: user.role,
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "1m" }
+        { expiresIn: "2h" }
       );
       return res.status(200).json({ accessToken });
     }

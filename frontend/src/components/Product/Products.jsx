@@ -1,9 +1,9 @@
 import ProductItem from "./ProductItem";
 import "./Products.css";
-import productsData from "../../data.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Slider from "react-slick";
 import PropTypes from "prop-types";
+import { message } from "antd";
 
 function NextBtn({ onClick }) {
   return (
@@ -30,7 +30,32 @@ PrevBtn.propTypes = {
 };
 
 export default function Products() {
-  const [products] = useState(productsData);
+  const [products,setProducts] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/products`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setProducts(data);
+        } else {
+          message.error(
+            response.status == 401 ? data.error : "Bir sorun oluştu"
+          );
+        }
+      } catch (err) {
+        console.log("Giriş hatası:", err);
+      }
+    };
+    fetchCategories();
+  }, [apiUrl]);
 
 
   const sliderSettings = {
@@ -74,7 +99,7 @@ export default function Products() {
         <div className="product-wrapper product-carousel">
             <Slider {...sliderSettings}>
               {products.map((product) => (
-                <ProductItem productItem={product} key={product.id} />
+                <ProductItem productItem={product} key={product._id} />
               ))}
             </Slider>
         </div>

@@ -80,7 +80,7 @@
   }
   
   .site-main .colors .color-wrapper.active {
-    border-color: #e51414;
+    border: 2px solid #e51414 !important;
   }
   
   .site-main .colors .color-wrapper input[type="radio"] {
@@ -88,7 +88,7 @@
   }
   
   .site-main .colors .color-wrapper:hover {
-    border-color: #e51414;
+    border: 2px solid #e51414 !important;
   }
   
   .site-main .colors .color-wrapper label {

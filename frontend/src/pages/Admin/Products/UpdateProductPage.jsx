@@ -28,6 +28,11 @@ export default function UpdateProductPage() {
     name: "img",
     multiple: true,
     action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+    async onRemove(file) {
+      // Kaldırılan dosyanın referansını bulun ve state'ten çıkarın
+      const newUploadImages = uploadImages.filter(item => item.uid !== file.uid);
+      await setUploadImages(newUploadImages);
+    },
     async onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {

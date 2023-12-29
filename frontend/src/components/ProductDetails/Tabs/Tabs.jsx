@@ -1,21 +1,22 @@
 import "./Tabs.css";
 import Reviews from "../../Reviews/Reviews";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
-export default function Tabs() {
+export default function Tabs({ productItem,onUpdate }) {
   const [activeTab, setActiveTab] = useState("desc");
 
   const handleTabClick = (e, tab) => {
-    setActiveTab(tab)
+    setActiveTab(tab);
     event.preventDefault();
-  }
+  };
 
   return (
     <div className="single-tabs">
       <ul className="tab-list">
         <li>
           <a
-            onClick={(e) => handleTabClick(e,"desc")}
+            onClick={(e) => handleTabClick(e, "desc")}
             href="#"
             className={`tab-button ${activeTab === "desc" ? "active" : ""}`}
           >
@@ -24,7 +25,7 @@ export default function Tabs() {
         </li>
         <li>
           <a
-            onClick={(e) => handleTabClick(e,"info")}
+            onClick={(e) => handleTabClick(e, "info")}
             href="#"
             className={`tab-button ${activeTab === "info" ? "active" : ""}`}
           >
@@ -33,7 +34,7 @@ export default function Tabs() {
         </li>
         <li>
           <a
-            onClick={(e) => handleTabClick(e,"review")}
+            onClick={(e) => handleTabClick(e, "review")}
             href="#"
             className={`tab-button ${activeTab === "review" ? "active" : ""}`}
           >
@@ -48,25 +49,7 @@ export default function Tabs() {
           }`}
           id="desc"
         >
-          <p>
-            Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin
-            vitae magna in dui finibus malesuada et at nulla. Morbi elit ex,
-            viverra vitae ante vel, blandit feugiat ligula. Fusce fermentum
-            iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales
-            nunc, in pellentesque lorem mattis quis. Cras imperdiet est in nunc
-            tristique lacinia. Nullam aliquam mauris eu accumsan tincidunt.
-            Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.
-          </p>
-          <br />
-          <p>
-            Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin
-            vitae magna in dui finibus malesuada et at nulla. Morbi elit ex,
-            viverra vitae ante vel, blandit feugiat ligula. Fusce fermentum
-            iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales
-            nunc, in pellentesque lorem mattis quis. Cras imperdiet est in nunc
-            tristique lacinia. Nullam aliquam mauris eu accumsan tincidunt.
-            Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.
-          </p>
+          <p dangerouslySetInnerHTML={{ __html: productItem.description }} />
         </div>
         <div
           className={`tab-panel-information content ${
@@ -81,15 +64,26 @@ export default function Tabs() {
                 <th>Color</th>
                 <td>
                   <p>
-                    Apple Red, Bio Blue, Sweet Orange, Blue, Green, Pink, Black,
-                    White
+                    {productItem.colors.map((color, index) => (
+                      <span key={color._id}>
+                        {color.code.toUpperCase()}
+                        {index < productItem.colors.length - 1 && ", "}
+                      </span>
+                    ))}
                   </p>
                 </td>
               </tr>
               <tr>
                 <th>Size</th>
                 <td>
-                  <p>XXS, XS, S, M, L, XL, XXL</p>
+                  <p>
+                    {productItem.sizes.map((size, index) => (
+                      <span key={size._id}>
+                        {size.size.toUpperCase()}
+                        {index < productItem.sizes.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </p>
                 </td>
               </tr>
             </tbody>
@@ -97,8 +91,14 @@ export default function Tabs() {
         </div>
         <Reviews
           active={activeTab === "review" ? "active content" : "content"}
+          productId={productItem._id} onUpdate={onUpdate}
         />
       </div>
     </div>
   );
 }
+
+Tabs.propTypes = {
+  productItem: PropTypes.object,
+  onUpdate: PropTypes.func
+};

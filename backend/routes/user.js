@@ -12,6 +12,14 @@ const getRoles = async (authHeader, req, res) => {
   return decoded.roles;
 };
 
+const getUserId = async (authHeader, req, res) => {
+  let token;
+  token = authHeader.split(" ")[1];
+  const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  console.log(decoded)
+  return decoded.user.id;
+};
+
 router.get("/currentUserRoles", async (req, res) => {
   try {
     let authHeader = req.headers.authorization || req.headers.Authorization;
@@ -22,10 +30,33 @@ router.get("/currentUserRoles", async (req, res) => {
   }
 });
 
+router.get("/currentUserInfo", async (req, res) => {
+  try {
+    let authHeader = req.headers.authorization || req.headers.Authorization;
+    const userId = await getUserId(authHeader);
+    const user = await User.findById(userId);
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.get("/", validateToken, isAdmin, async (req, res) => {
   try {
     const users = await User.find(); // tüm verileri getirir
     res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+router.get("/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId); // tüm verileri getirir
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
